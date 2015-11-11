@@ -1,4 +1,4 @@
-builddir=../build
+builddir=build
 target=$(builddir)/test
 #generator=Ninja
 

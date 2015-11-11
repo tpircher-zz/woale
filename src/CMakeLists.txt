@@ -1,40 +1,18 @@
-# This is the main CMakeLists.txt file.
-#
-
-# Require a minimum cmake version.
-cmake_minimum_required(VERSION 3.0.0)
-
-# Disallow in-source builds, i.e. require out-of-source builds.
-set(CMAKE_DISABLE_SOURCE_CHANGES true)
-set(CMAKE_DISABLE_IN_SOURCE_BUILD true)
-
-# Add the custom cmake folder.
-# This needs to be called *before* project() is called.
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-
-
-# The name of the project
-project(woale VERSION 0.0.0 LANGUAGES "C")
-
-# Include some helper scripts. These scripts will also be included (and
-# defined) in subdirectories.
-include(LocalCmakeConfig)
-
-
 # Generate a header file based on the current CMake settings. All local
 # variables and all CACHE'd variables can be referenced from the input file.
-configure_file(
-        "${PROJECT_SOURCE_DIR}/config.h.in"
-        "${PROJECT_BINARY_DIR}/config.h")
+configure_file("config.h.in" "config.h")
 
 # Add the source path to the compiler include path.
-include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
 
 # Find libraries
-#find_package(FFmpeg REQUIRED COMPONENTS avcodec avutil)
+find_package(LibGit2 REQUIRED)
+find_package(Cgic REQUIRED)
 
 
-# Add all subdirectories
-add_subdirectory(cli)
-add_subdirectory(doc)
+set(target woale.cgi)
+add_executable(${target} main.c)
+include_directories(${target} ${LIBGIT2_INCLUDE_DIR} ${CGIC_INCLUDE_DIR})
+#target_link_libraries(${target} ${LIBGIT2_LIBRARY} ${CGIC_LIBRARY})
+target_link_libraries(${target} ${LIBGIT2_LIBRARY})
