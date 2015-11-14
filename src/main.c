@@ -21,23 +21,40 @@
  * \file
  * Main file for the woale application.
  */
+
+#include <cgic.h>
 #include <stdio.h>
+//#include <string.h>
+//#include <stdlib.h>
+#include <stdbool.h>
 #include "config.h"
 
+typedef struct cfg {
+    const char *cfg_file;
+    const char *server_name;
+} cfg_t;
 
 
-/**
- * Program entry.
- *
- * \param argc - the number of arguments in \p argv.
- * \param argv - an array of string pointers to the program arguments.
- * \retval 0 on success.
- * \retval nonzero on error.
- */
-int main(int argc, char* argv[])
+int handle_cgi(void);
+bool load_config(cfg_t *cfg);
+
+
+bool load_config(cfg_t *cfg)
 {
-    (void)argc;
-    (void)argv;
+    cfg->cfg_file = INSTALL_SYSCONFIG_DIR "/woale.conf";
+    cfg->server_name = "test.example.com";
+    return true;
+}
 
+int main(void)
+{
+    cfg_t cfg;
+    load_config(&cfg);
+    return handle_cgi();
+}
+
+
+int handle_cgi(void)
+{
     return 0;
 }

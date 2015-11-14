@@ -13,6 +13,14 @@ find_package(Cgic REQUIRED)
 
 set(target woale.cgi)
 add_executable(${target} main.c)
-include_directories(${target} ${LIBGIT2_INCLUDE_DIR} ${CGIC_INCLUDE_DIR})
+#include_directories(${target} ${LIBGIT2_INCLUDE_DIR} ${CGIC_INCLUDE_DIR})
 #target_link_libraries(${target} ${LIBGIT2_LIBRARY} ${CGIC_LIBRARY})
-target_link_libraries(${target} ${LIBGIT2_LIBRARY})
+include_directories(${target} ${CGIC_INCLUDE_DIR})
+target_link_libraries(${target} ${CGIC_LIBRARY})
+
+
+install(TARGETS ${target}
+        RUNTIME DESTINATION "bin")
+
+install(FILES "${CMAKE_SOURCE_DIR}/etc/woale.conf"
+        DESTINATION ${INSTALL_SYSCONFIG_DIR})

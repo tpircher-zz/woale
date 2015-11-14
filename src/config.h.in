@@ -52,5 +52,9 @@
 #define VERSION_PATCH  ${PROJECT_VERSION_PATCH}
 
 
+/**
+ * The system configuration path.
+ */
+#define INSTALL_SYSCONFIG_DIR   "${INSTALL_SYSCONFIG_DIR}"
 
 #endif
