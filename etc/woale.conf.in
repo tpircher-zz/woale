@@ -1,0 +1,5 @@
+# Configuration file for woale
+
+# data_dir
+# The directory for the wiki pages.
+# Default: data_dir = "/${INSTALL_LOCALSTATE_DIR}/lib/woale"

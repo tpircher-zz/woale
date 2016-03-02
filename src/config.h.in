@@ -1,5 +1,4 @@
-/*
- * Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
+/* Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
  *
  * woale -- a wiki engine.
  *
@@ -19,7 +18,7 @@
 
 /**
  * \file
- * Global config file for EXAMPLE_PROJECT.
+ * Global config file for woale.
  *
  * This file is preprocessed by cmake and will give a config.h file in the build
  * directory. All cmake variables surrounded by @ signs will be expanded.
@@ -55,6 +54,17 @@
 /**
  * The system configuration path.
  */
-#define INSTALL_SYSCONFIG_DIR   "${INSTALL_SYSCONFIG_DIR}"
+#define INSTALL_SYSCONFIG_DIR   "${CMAKE_INSTALL_PREFIX}/${INSTALL_SYSCONFIG_DIR}"
+
+
+/**
+ * The path to the configuration file.
+ */
+#define CONFIG_FILE_PATH    "${CMAKE_INSTALL_PREFIX}/${INSTALL_SYSCONFIG_DIR}/mailcgi.conf"
+
+/**
+ * Modifiable single-machine data.
+ */
+#define INSTALL_LOCALSTATE_DIR  "${CMAKE_INSTALL_PREFIX}/${INSTALL_LOCALSTATE_DIR}"
 
 #endif

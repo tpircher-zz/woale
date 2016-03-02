@@ -1,0 +1,34 @@
+2015-11-16  Thomas Pircher   <tehpeh-web@tty1.net>
+
+    * src/main.c:
+    * data/share/woale/marked.min.js:
+    Added support for marked, a Javascript markdown formatter.
+
+2015-11-15  Thomas Pircher   <tehpeh-web@tty1.net>
+
+    * src/main.c:
+    Simple text displaying and editing works now.
+
+2015-11-11  Thomas Pircher   <tehpeh-web@tty1.net>
+
+    * configure.py:
+    * doc/CMakeLists.txt:
+    * doc/Mainpage.md:
+    * doc/Doxyfile.in:
+    * CMakeLists.txt:
+    * cmake/FindLibGit2.cmake:
+    * cmake/FindCgic.cmake:
+    * cmake/LocalCmakeConfig.cmake:
+    * src/config.h.in:
+    * src/CMakeLists.txt:
+    Build infrastructure.
+
+    * src/main.c:
+    * data/share/woale/main.css:
+    * data/etc/woale.conf:
+    Source files.
+
+    * ChangeLog:
+    * COPYING:
+    * AUTHOR:
+    Admin files.

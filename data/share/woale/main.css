@@ -1,0 +1,12 @@
+pre#wikitext {
+    width: auto;
+    padding: 1em 1ex;
+    white-space: pre-wrap;
+    background-color: #e8e8e8;
+    font-family: monospace;
+}
+
+textarea {
+    border: 1px solid #999999;
+    font-family: monospace;
+}
