@@ -31,8 +31,8 @@
  * A structure containing the configuration options.
  */
 typedef struct {
-    bool debug;
-    const char *data_dir;
+    bool debug;             //!< Whether debug is enabled.
+    const char *data_dir;   //!< Path to the data path.
 } config_t;
 
 

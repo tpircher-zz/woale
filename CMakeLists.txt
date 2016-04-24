@@ -37,6 +37,7 @@ project(woale VERSION 0.0.0 LANGUAGES "C")
 # Include some helper scripts. These scripts will also be included (and
 # defined) in subdirectories.
 include(LocalCmakeConfig)
+include(GNUInstallDirs)
 
 
 # Add all subdirectories

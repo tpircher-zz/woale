@@ -2,4 +2,4 @@
 
 # data_dir
 # The directory for the wiki pages.
-# Default: data_dir = "/${INSTALL_LOCALSTATE_DIR}/lib/woale"
+# Default: data_dir = "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/lib/woale"

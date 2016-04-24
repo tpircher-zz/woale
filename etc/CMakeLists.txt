@@ -17,5 +17,5 @@
 
 
 configure_file("woale.conf.in" "woale.conf")
-install(FILES "woale.conf"
-        DESTINATION "${INSTALL_SYSCONFIG_DIR}")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/woale.conf"
+        DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}")

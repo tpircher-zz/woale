@@ -17,10 +17,10 @@
 
 
 install(FILES "etc/woale.conf"
-    DESTINATION ${INSTALL_SYSCONFIG_DIR})
+    DESTINATION ${CMAKE_INSTALL_SYSCONFDIR})
 
 install(DIRECTORY "share/woale"
-    DESTINATION "${INSTALL_DATAROOT_DIR}"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}"
     DIRECTORY_PERMISSIONS
     OWNER_WRITE OWNER_READ OWNER_EXECUTE
                 GROUP_READ GROUP_EXECUTE
@@ -30,5 +30,5 @@ install(DIRECTORY "share/woale"
 set(INSTALL_MARKED_JS YES CACHE BOOL "Install the marked javascript library")
 if (${INSTALL_MARKED_JS})
     install(FILES "share/woale/marked.min.js"
-        DESTINATION "${INSTALL_DATAROOT_DIR}/woale")
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/woale")
 endif()

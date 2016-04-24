@@ -35,22 +35,3 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${common_c_flags}")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${common_c_flags}")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${common_c_flags}")
 set(CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL} ${common_c_flags}")
-
-
-#macro(set_install_path var suffix)
-#    if ("${${var}}" STREQUAL "")
-#        get_filename_component(${var} "${CMAKE_INSTALL_PREFIX}/${suffix}" ABSOLUTE)
-#    else()
-#        get_filename_component(${var} "${${var}}" ABSOLUTE)
-#    endif()
-#endmacro()
-#
-## Set install directories
-#set_install_path(INSTALL_SYSCONFIG_DIR "etc")
-#set_install_path(INSTALL_LOCALSTATE_DIR "var")
-#set_install_path(INSTALL_DATAROOT_DIR "share")
-
-set(INSTALL_SYSCONFIG_DIR "etc" CACHE PATH "read-only configuration data")
-set(INSTALL_LOCALSTATE_DIR "var" CACHE PATH "modifiable single-machine data")
-set(INSTALL_LIB_DIR "usr/lib" CACHE PATH "object code libraries")
-set(INSTALL_DATAROOT_DIR "usr/share" CACHE PATH "read-only arch.-independent data root")
