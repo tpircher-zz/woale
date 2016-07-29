@@ -32,7 +32,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 
 # The name of the project
-project(woale VERSION 0.0.0 LANGUAGES "C")
+project(woale VERSION 0.0.1 LANGUAGES "C")
 
 # Include some helper scripts. These scripts will also be included (and
 # defined) in subdirectories.
