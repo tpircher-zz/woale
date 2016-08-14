@@ -2,7 +2,7 @@ woale -- a wiki engine.
 
 
 
-\copyright Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
+\copyright Copyright (C) 2015-2016  Thomas Pircher <tehpeh-web@tty1.net>
 \license \parblock
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

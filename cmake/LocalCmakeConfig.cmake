@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
+# Copyright (C) 2015-2016  Thomas Pircher <tehpeh-web@tty1.net>
 #
 # woale -- a wiki engine.
 #
@@ -29,9 +29,11 @@ set(local_cmake_config_included true)
 
 
 # Set default compiler flags.
-set(common_c_flags "-W -Wall -Werror -std=c11")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${common_c_flags}")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${common_c_flags}")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${common_c_flags}")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${common_c_flags}")
-set(CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL} ${common_c_flags}")
+set(cxx_warnings "-W -Wall -Werror -Wextra -Wstrict-aliasing -Weffc++ -std=c++14")
+set(cxx_flags "-ftree-vectorize -ftree-vectorizer-verbose=2 -ffast-math -fstrict-aliasing")
+set(common_cxx_flags "${cxx_warnings} ${cxx_flags}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${common_cxx_flags}")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${common_cxx_flags}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${common_cxx_flags}")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${common_cxx_flags}")
+set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} ${common_cxx_flags}")

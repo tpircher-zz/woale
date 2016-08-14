@@ -18,14 +18,15 @@
 
 /**
  * \file
- * Configuration file parser.
+ * A woale config file parser.
  */
 
-#ifndef WOALE_FILEPARSER_H
-#define WOALE_FILEPARSER_H
+#ifndef WOALE_CONFFILEPARSER_H
+#define WOALE_CONFFILEPARSER_H
 
-
+#include "fileparser.h"
 #include <string>
+
 
 
 namespace woale {
@@ -33,41 +34,40 @@ namespace woale {
     /**
      * Generic configuration file parser class.
      */
-    class FileParser {
+    class WoaleFileParser : public FileParser {
         public:
             /**
-             * Virtual destructor.
+             * Initialise the woale configuration file parser.
              */
-            virtual ~FileParser()
+            WoaleFileParser();
+
+
+            /**
+             * Get the value of the data_dir configuration variable.
+             * \return The value of data_dir.
+             */
+            const std::string data_dir() const
             {
+                return data_dir_;
             }
 
             /**
-             * Parse the file.
-             * \param[in] file_name the path to the file to parse.
+             * Get the value of the http_data_path configuration variable.
+             * \return The value of http_data_path.
              */
-            void parse(const char *file_name);
-
+            const std::string http_data_path() const
+            {
+                return http_data_path_;
+            }
 
         private:
-            /**
-             * The state of the file parser.
-             */
-            enum State {
-                NONE,           //!< idle state.
-                COMMENT,        //!< currently in a comment.
-                ID,             //!< parsing an identifier.
-                SEARCH_EQ,      //!< expecting an equal sign.
-                SEARCH_VALUE,   //!< expecting a value.
-                VALUE,          //!< parsing a value (rhs of the equals sign).
-                STR_VALUE,      //!< parsing a string value.
-                SEARCH_EOL,     //!< expect an end-of-line.
-            };
+            std::string data_dir_;
+            std::string http_data_path_;
 
             /**
              * Add a {key, val} tuple.
              */
-            virtual void add_key_val(const std::string& key, const std::string &val) = 0;
+            virtual void add_key_val(const std::string& key, const std::string &val);
     };
 
 };

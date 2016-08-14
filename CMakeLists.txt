@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
+# Copyright (C) 2015-2016  Thomas Pircher <tehpeh-web@tty1.net>
 #
 # woale -- a wiki engine.
 #
@@ -32,7 +32,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 
 # The name of the project
-project(woale VERSION 0.0.1 LANGUAGES "C")
+project(woale VERSION 0.0.2 LANGUAGES "CXX")
 
 # Include some helper scripts. These scripts will also be included (and
 # defined) in subdirectories.

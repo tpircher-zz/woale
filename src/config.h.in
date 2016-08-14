@@ -1,4 +1,4 @@
-/* Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
+/* Copyright (C) 2015-2016  Thomas Pircher <tehpeh-web@tty1.net>
  *
  * woale -- a wiki engine.
  *
@@ -23,8 +23,8 @@
  * This file is preprocessed by cmake and will give a config.h file in the build
  * directory. All cmake variables surrounded by @ signs will be expanded.
  */
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef WOALE_CONFIG_H
+#define WOALE_CONFIG_H
 
 /**
  * The project major version.
@@ -54,11 +54,12 @@
 /**
  * The full path to the configuration file.
  */
-#define CONFIG_FILE_PATH    "${CMAKE_INSTALL_FULL_SYSCONFDIR}/mailcgi.conf"
+#define CONFIG_FILE_PATH    "${CMAKE_INSTALL_FULL_SYSCONFDIR}/woale.conf"
 
 /**
  * Modifiable single-machine data.
  */
 #define INSTALL_LOCALSTATE_DIR  "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}"
+
 
 #endif

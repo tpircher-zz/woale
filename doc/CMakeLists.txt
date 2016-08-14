@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
+# Copyright (C) 2015-2016  Thomas Pircher <tehpeh-web@tty1.net>
 #
 # woale -- a wiki engine.
 #
@@ -39,5 +39,6 @@ if(BUILD_DOCUMENTATION)
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
 
-    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION share/doc OPTIONAL)
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/doc/woale" OPTIONAL)
 endif()

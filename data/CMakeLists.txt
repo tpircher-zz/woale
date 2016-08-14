@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
+# Copyright (C) 2015-2016  Thomas Pircher <tehpeh-web@tty1.net>
 #
 # woale -- a wiki engine.
 #
@@ -19,16 +19,13 @@
 install(FILES "etc/woale.conf"
     DESTINATION ${CMAKE_INSTALL_SYSCONFDIR})
 
-install(DIRECTORY "share/woale"
-    DESTINATION "${CMAKE_INSTALL_DATADIR}"
-    DIRECTORY_PERMISSIONS
-    OWNER_WRITE OWNER_READ OWNER_EXECUTE
-                GROUP_READ GROUP_EXECUTE
-                WORLD_READ WORLD_EXECUTE
-    FILES_MATCHING PATTERN "*.css")
+
+install(FILES "share/main.css"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/woale")
+
 
 set(INSTALL_MARKED_JS YES CACHE BOOL "Install the marked javascript library")
 if (${INSTALL_MARKED_JS})
-    install(FILES "share/woale/marked.min.js"
+    install(FILES "share/marked.min.js"
         DESTINATION "${CMAKE_INSTALL_DATADIR}/woale")
 endif()

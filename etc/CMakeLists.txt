@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
+# Copyright (C) 2015-2016  Thomas Pircher <tehpeh-web@tty1.net>
 #
 # woale -- a wiki engine.
 #

@@ -3,3 +3,7 @@
 # data_dir
 # The directory for the wiki pages.
 # Default: data_dir = "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/lib/woale"
+
+# http_data_path
+# The HTTP path to the static data path (main.css marked.min.js)
+# Default: http_data_path = "/wiki-files"

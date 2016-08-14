@@ -17,48 +17,45 @@
 
 
 
-# FindCgic
-# --------
+# FindSqlite
+# ---------
 #
-# Find libcgic include dirs and libraries.
+# Find libcgicc include dirs and libraries.
 #
 # Use this module by invoking find_package with the form:
 #
-#   find_package(Cgic
+#   find_package(Sqlite
 #     [REQUIRED]             # Fail with error if the library is not found
 #     )
 #
 # This module finds headers and requested component libraries.  Results are
 # reported in variables:
 #
-#   Cgic_FOUND            - True if headers and requested libraries were found
-#   Cgic_INCLUDE_DIR      - include directories
-#   Cgic_LIBRARY          - libcgic component libraries to be linked
+#   Sqlite_FOUND            - True if headers and requested libraries were found
+#   Sqlite_INCLUDE_DIRS     - include directories
+#   Sqlite_LIBRARIES        - libcgicc component libraries to be linked
 #
 
 # Use pkg-config (if available) to find the directories of the componants.
 find_package(PkgConfig QUIET)
+pkg_check_modules(PKG_SQLITE QUIET "libcgicc")
+set(SQLITE_DEFINITIONS ${PKG_SQLITE_CFLAGS_OTHER})
 
-if(PKG_CONFIG_FOUND)
-    pkg_check_modules(PC_CGIC QUIET "libcgic")
-    set(CGIC_DEFINITIONS ${PC_CGIC_CFLAGS_OTHER})
-endif()
+find_path(SQLITE_INCLUDE_DIR
+        NAMES sqlite3.h
+        HINTS ${PKG_SQLITE_INCLUDEDIR} ${PKG_SQLITE_INCLUDE_DIRS}
+        PATH_SUFFIXES cgicc)
 
-find_path(CGIC_INCLUDE_DIR
-    NAMES cgic.h
-    HINTS ${PC_CGIC_INCLUDEDIR} ${PC_CGIC_INCLUDE_DIRS}
-    PATH_SUFFIXES cgic)
+find_library(SQLITE_LIBRARY
+        NAMES sqlite3
+        HINTS ${PKG_SQLITE_LIBDIR} ${PKG_SQLITE_LIBRARY_DIRS})
 
-find_library(CGIC_LIBRARY
-    NAMES cgic
-    HINTS ${PC_CGIC_LIBDIR} ${PC_CGIC_LIBRARY_DIRS})
-
-
-set(CGIC_LIBRARIES ${CGIC_LIBRARY} )
-set(CGIC_INCLUDE_DIRS ${CGIC_INCLUDE_DIR} )
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Cgic DEFAULT_MSG
-                                  CGIC_LIBRARY CGIC_INCLUDE_DIR)
+find_package_handle_standard_args(Sqlite DEFAULT_MSG
+        SQLITE_LIBRARY SQLITE_INCLUDE_DIR)
 
-mark_as_advanced(Cgic_FOUND CGIC_INCLUDE_DIR CGIC_LIBRARY)
+mark_as_advanced(Sqlite_FOUND SQLITE_INCLUDE_DIR SQLITE_LIBRARY)
+
+set(SQLITE_LIBRARIES ${SQLITE_LIBRARY})
+set(SQLITE_INCLUDE_DIRS ${SQLITE_INCLUDE_DIR})

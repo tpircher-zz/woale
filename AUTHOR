@@ -1,4 +1,12 @@
-Thomas Pircher: main developer.
+Thomas Pircher:
+    woale main developer.
 
-Christopher Jeffrey: marked - a markdown parser (MIT Licensed)
+Christopher Jeffrey for marked, a markdown parser (MIT Licensed)
+    data/share/woale/marked.min.js
 
+Doxygen project for generated files in doc (no licence attached)
+    build/doc/html/search/search.js
+    build/doc/html/dynsections.js
+
+John Resig et.al. (Dual licensed under the MIT or GPL Version 2 licenses.)
+    build/doc/html/jquery.js

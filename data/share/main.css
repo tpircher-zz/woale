@@ -1,3 +1,11 @@
+/* woale -- a wiki engine.
+ * Copyright (C) 2016  Thomas Pircher <tehpeh-web@tty1.net>
+ * Released under the GNU General Public License v3.
+ */
+div#header {
+    border-bottom: 1px solid grey;
+}
+
 pre#wikitext {
     width: auto;
     padding: 1em 1ex;

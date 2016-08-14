@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2016  Thomas Pircher <tehpeh@gmx.net>
+# Copyright (C) 2015-2016  Thomas Pircher <tehpeh-web@tty1.net>
 #
 # woale -- a wiki engine.
 #
@@ -25,16 +25,14 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
 
 # Find libraries
-#find_package(LibGit2 REQUIRED)
-find_package(Cgic REQUIRED)
+find_package(Cgicc REQUIRED)
+find_package(Sqlite REQUIRED)
 
 
 set(target woale.cgi)
-add_executable(${target} main.c fileparser.c)
-#include_directories(${target} ${LIBGIT2_INCLUDE_DIR} ${CGIC_INCLUDE_DIR})
-#target_link_libraries(${target} ${LIBGIT2_LIBRARY} ${CGIC_LIBRARY})
-include_directories(${target} ${CGIC_INCLUDE_DIR})
-target_link_libraries(${target} ${CGIC_LIBRARY})
+add_executable(${target} main.cc fileparser.cc woale_confparser.cc dbconn.cc)
+include_directories(${target} ${CGICC_INCLUDE_DIR} ${SQLITE_INCLUDE_DIR})
+target_link_libraries(${target} ${CGICC_LIBRARY} ${SQLITE_LIBRARY})
 
 
 install(TARGETS "${target}"
