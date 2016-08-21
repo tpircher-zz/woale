@@ -161,12 +161,12 @@ int main(int argc, char **argv)
             cgicc::title(std::string("woale &ndash; ") + page_path) <<
             cgicc::meta().set("charset", "utf-8") <<
             cgicc::link().set("href", fp.http_data_path() + "/main.css").set("rel", "stylesheet").set("type", "text/css") <<
-            cgicc::script().set("src", fp.http_data_path() + "/marked.min.js") << cgicc::script() <<
+            cgicc::script().set("src", fp.js_render_lib()) << cgicc::script() <<
             cgicc::head() << "\n";
         std::cout << cgicc::body();
 
         cgicc::form_iterator edit = cgi.getElement("edit");
-        if (!edit->isEmpty() && edit != cgi.getElements().end()) {
+        if (edit != cgi.getElements().end() && !edit->isEmpty()) {
             std::string path_info = env.getScriptName() + page_path;
             std::cout <<
                 cgicc::form().set("method", "post").set("enctype", "multipart/form-data").set("action", path_info) <<

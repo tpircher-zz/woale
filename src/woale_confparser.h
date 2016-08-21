@@ -60,9 +60,19 @@ namespace woale {
                 return http_data_path_;
             }
 
+            /**
+             * Get the value of the js_render_lib configuration variable.
+             * \return The value of js_render_lib.
+             */
+            const std::string js_render_lib() const
+            {
+                return js_render_lib_;
+            }
+
         private:
             std::string data_dir_;
             std::string http_data_path_;
+            std::string js_render_lib_;
 
             /**
              * Add a {key, val} tuple.

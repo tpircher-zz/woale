@@ -2,54 +2,32 @@
 
 woale is a small and fast cgi wiki engine written in C++.
 
+The wiki pages are stored in an SQLite database. The pages are written in
+[markdown] and are rendered in the browser using a JavaScript library. woale is
+developed using the [marked] markdown parser, although any other
+language/parser library could be used instead.
+
+Download the source code from [woale].
 
 ## Installation
 
-In order to build woale you need:
-- SQLite3 development files
-- cgicc development files
-- cmake
+See INSTALL.md for installation instructions.
 
-Build woale:
-    INSTALL_DIR=/some/install/prefix
-    ./configure --prefix=$INSTALL_DIR
-    cd build
-    make && make install
+## Feedback
 
-### Create sqlite database:
-    sqlite3 $INSTALL_DIR/var/lib/woale/pages.sqlite3 \
-            'create table if not exists pages (id integer primary key, date timestamp, path varchar(255), content varchar);'
-    sqlite3 $INSTALL_DIR/var/lib/woale/pages.sqlite3 \
-            'insert into pages(date, path, content) values (datetime(), "/", "# Main\nThis is the top-level page.");'
+Please submit feedback, bugs and patches on the [woale] GitHub page.
 
-## Testing
+## Copyright
 
-The easiest way to test woale.cgi is to start a HTTP server using Python.
-Build and install the code as above, e.g. with `INSTALL_DIR=/tmp/woale-test`.
+Copyright (C) 2015-2016  Thomas Pircher <tehpeh-web@tty1.net>
 
-Then create an empty sqlite database (see above).
-Create a symlink to the metadata such as the CSS and the javascript library:
-    ln -s $INSTALL_DIR/share/woale wiki-files
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-Finally start the HTTP server:
-    #!/usr/bin/env python3
+See the file LICENSE for the full text of the GPLv3.
 
-    import http.server
-    import socketserver
-    import os
-
-    def main():
-        port = 8000
-        handler = http.server.CGIHTTPRequestHandler
-        handler.cgi_directories = ['/src']
-        print('http://localhost:{}/src/woale.cgi'.format(port))
-        server = socketserver.TCPServer(('', port), handler)
-        server.server_name = 'wusel.tty1.net'
-        server.server_port = port
-        try:
-            server.serve_forever()
-        except KeyboardInterrupt:
-            server.socket.close()
-
-    if __name__ == '__main__':
-        main()
+[woale]: https://github.com/tpircher/woale
+[marked]: https://github.com/chjj/marked
+[markdown]: https://en.wikipedia.org/wiki/Markdown

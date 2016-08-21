@@ -24,8 +24,5 @@ install(FILES "share/main.css"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/woale")
 
 
-set(INSTALL_MARKED_JS YES CACHE BOOL "Install the marked javascript library")
-if (${INSTALL_MARKED_JS})
-    install(FILES "share/marked.min.js"
-        DESTINATION "${CMAKE_INSTALL_DATADIR}/woale")
-endif()
+install(FILES "doc/schema-sqlite.sql"
+    DESTINATION "${CMAKE_INSTALL_DOCDIR}")

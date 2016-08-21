@@ -5,5 +5,9 @@
 # Default: data_dir = "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/lib/woale"
 
 # http_data_path
-# The HTTP path to the static data path (main.css marked.min.js)
+# The HTTP path to the static data path (main.css)
 # Default: http_data_path = "/wiki-files"
+
+# js_render_lib
+# The HTTP path to the marked.min.js file.
+# Default: js_render_lib = "/wiki-files/marked.min.js"

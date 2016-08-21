@@ -1,7 +1,4 @@
 contrib
 build
-
-debian/files
-debian/woale.debhelper.log
-debian/woale.substvars
-debian/woale/
+debian
+.pc

@@ -40,9 +40,8 @@ parser.add_argument('--localstatedir', dest='localstatedir', metavar='DIR',
                    help='install data files which the programs modify while they run in DIR.')
 parser.add_argument('--libdir', dest='libdir', metavar='DIR',
                    help='install object files and libraries of object code in DIR.')
-
-parser.add_argument('--disable-marked', dest='marked', default=True, action='store_false',
-                   help='don\'t install the marked library')
+parser.add_argument('--docdir', dest='docdir', metavar='DIR',
+                   help='install documentation files for this package in DIR.')
 
 
 args = parser.parse_args()
@@ -72,9 +71,8 @@ if args.localstatedir is not None:
     cmake_cmd.append('-DCMAKE_INSTALL_LOCALSTATEDIR={0:s}'.format(os.path.abspath(args.localstatedir)))
 if args.libdir is not None:
     cmake_cmd.append('-DCMAKE_INSTALL_LIBDIR={0:s}'.format(os.path.abspath(args.libdir)))
-
-if not args.marked:
-    cmake_cmd.append('-DINSTALL_MARKED_JS:BOOL=NO')
+if args.docdir is not None:
+    cmake_cmd.append('-DCMAKE_INSTALL_DOCDIR={0:s}'.format(os.path.abspath(args.docdir)))
 
 
 

@@ -24,6 +24,7 @@
 #include "config.h"
 #include "woale_confparser.h"
 #include <sstream>
+#include <stdexcept>
 
 
 namespace woale {
@@ -31,7 +32,8 @@ namespace woale {
     WoaleFileParser::WoaleFileParser() :
         FileParser(),
         data_dir_(INSTALL_LOCALSTATE_DIR "/lib/woale"),
-        http_data_path_("/wiki-files")
+        http_data_path_("/wiki-files"),
+        js_render_lib_("/wiki-files/marked.min.js")
     {
     }
 
@@ -42,6 +44,8 @@ namespace woale {
             data_dir_ = val;
         } else if (key == "http_data_path") {
             http_data_path_ = val;
+        } else if (key == "js_render_lib") {
+            js_render_lib_ = val;
         } else {
             std::stringstream err;
             err << "unknown configuration key '" << key << "'.";
