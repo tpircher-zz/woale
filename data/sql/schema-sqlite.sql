@@ -10,9 +10,10 @@ create table if not exists page (
 create index page_idx on page(name);
 
 create table if not exists entry (
-    id integer primary key,
+    id integer not null,
     page_id integer not null references page,
     date timestamp,
-    content text);
+    content text,
+    unique(id, page_id));
 
 create index entry_idx on entry(page_id);

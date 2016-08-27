@@ -147,10 +147,17 @@ int main(int argc, char **argv)
 
         cgicc::form_iterator submit = cgi.getElement("savepage");
         if (submit != cgi.getElements().end()) {
-            db.save_page(page_path, escape(cgi("wikitext")));
+            cgicc::form_iterator elem = cgi.getElement("page_ver");
+            if (elem != cgi.getElements().end() && !elem->isEmpty()) {
+                unsigned int page_ver = std::stoi(elem->getValue());
+                if (!db.save_page(page_path, escape(cgi("wikitext")), page_ver)) {
+                    // FIXME add something here
+                }
+            }
         }
 
-        std::string page = unescape(db.get_page(page_path));
+        unsigned int page_ver;
+        std::string page = unescape(db.get_page(page_path, page_ver));
 
         // Send HTTP header
         std::cout << cgicc::HTTPHTMLHeader();
@@ -175,7 +182,8 @@ int main(int argc, char **argv)
                 cgicc::textarea() << cgicc::br() <<
                 cgicc::input().set("type", "submit").set("name", "savepage").set("value", "Save Page") <<
                 " &nbsp; &nbsp; " <<
-                cgicc::input().set("type", "button").set("value", "Back").set("onclick", "history.go(-1); return true;") <<
+                cgicc::input().set("type", "button").set("name", "back").set("value", "Back").set("onclick", "history.go(-1); return true;") <<
+                cgicc::input().set("type", "hidden").set("name", "page_ver").set("value", std::to_string(page_ver + 1)) <<
                 cgicc::form() << "\n";
         } else {
             std::cout <<
@@ -184,7 +192,8 @@ int main(int argc, char **argv)
                 cgicc::div() <<
                 cgicc::div().set("id", "content") << cgicc::div() <<
                 cgicc::script() <<
-                "document.getElementById('content').innerHTML = marked('" << escape(page) << "');" <<
+                "page_content = '" << escape(page) << "';" <<
+                "document.getElementById('content').innerHTML = marked(page_content);" <<
                 cgicc::script() << "\n";
         }
 

@@ -2,12 +2,17 @@
 
 woale is a small and fast cgi wiki engine written in C++.
 
-The wiki pages are stored in an SQLite database. The pages are written in
-[markdown] and are rendered in the browser using a JavaScript library. woale is
-developed using the [marked] markdown parser, although any other
-language/parser library could be used instead.
+The wiki text is rendered from text to HTML in the user's browser using a
+JavaScript library. The wiki has been tested using the [marked] JavaScript
+markdown parser, but other parsers could be used as well.
+This makes the woale source code simple and straightforward as it does not do
+any transformation on the wiki text and only retrieves the wiki text from and
+stores it to a SQLite database.
 
-Download the source code from [woale].
+Download the source code from the [woale] GitHub page.
+
+*Note: woale is currently in ALPHA stage and has not been fully tested and/or
+hardened. Be warned.*
 
 ## Installation
 
@@ -26,7 +31,7 @@ the terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version.
 
-See the file LICENSE for the full text of the GPLv3.
+See the LICENSE file for the full text of the GPLv3.
 
 [woale]: https://github.com/tpircher/woale
 [marked]: https://github.com/chjj/marked

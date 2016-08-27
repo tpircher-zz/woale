@@ -2,3 +2,4 @@ contrib
 build
 debian
 .pc
+data/share/marked.min.js

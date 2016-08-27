@@ -23,6 +23,10 @@ install(FILES "etc/woale.conf"
 install(FILES "share/main.css"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/woale")
 
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/share/marked.min.js")
+    install(FILES "share/marked.min.js"
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/woale")
+endif()
 
-install(FILES "doc/schema-sqlite.sql"
+install(FILES "sql/schema-sqlite.sql"
     DESTINATION "${CMAKE_INSTALL_DOCDIR}")

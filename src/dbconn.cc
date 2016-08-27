@@ -54,13 +54,14 @@ namespace woale {
     }
 
 
-    const std::string DbConn::get_page(const std::string page_name) const
+    const std::string DbConn::get_page(const std::string page_name, unsigned int &page_ver) const
     {
         sqlite3_stmt *stmt;
         const char *pzTail;
         int rc;
 
-        const std::string sql_request = "select content from entry inner join page on page_id = page.id where name = ?1 order by date desc limit 1;";
+        const std::string sql_request = "select entry.id, content from entry inner join page on page_id = page.id "
+            "where name = ?1 order by date desc limit 1;";
         rc = sqlite3_prepare_v2(db_, sql_request.c_str(), -1, &stmt, &pzTail);
         if (rc != SQLITE_OK) {
             throw std::runtime_error("Failed to prepare sqlite statement");
@@ -74,14 +75,17 @@ namespace woale {
         rc = sqlite3_step(stmt);
         if (rc == SQLITE_DONE) {
             sqlite3_finalize(stmt);
+            page_ver = 0;
             return "";  // "# Empty page.\nPress [edit](?edit=1) to edit this page.";
         } else if (rc != SQLITE_ROW) {
             sqlite3_finalize(stmt);
             throw std::runtime_error("Failed to fetch row");
         }
 
+        page_ver = sqlite3_column_int(stmt, 0);
+
         std::string str;
-        const char *content = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+        const char *content = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
         if (content == NULL) {
             str = "";
         } else {
@@ -92,7 +96,7 @@ namespace woale {
         return str;
     }
 
-    void DbConn::save_page(const std::string page_name, const std::string content)
+    bool DbConn::save_page(const std::string page_name, const std::string content, unsigned int page_ver)
     {
         sqlite3_stmt *stmt;
         const char *pzTail;
@@ -111,18 +115,23 @@ namespace woale {
         }
         sqlite3_finalize(stmt);
 
-        const std::string ins_entry = "with ins (page_name, date, content) as (values (?1, datetime(), ?2)) insert into entry (page_id, date, content) select page.id, ins.date, ins.content from page join ins on ins.page_name = page.name;";
+        const std::string ins_entry = "with ins (page_name, date, content) as (values (?1, datetime(), ?2)) "
+            "insert into entry (id, page_id, date, content) select ?3, page.id, ins.date, ins.content "
+            "from page join ins on ins.page_name = page.name;";
         rc = sqlite3_prepare(db_, ins_entry.c_str(), -1, &stmt, &pzTail);
         if (rc != SQLITE_OK) {
             throw std::runtime_error("Failed to prepare sqlite statement");
         }
         sqlite3_bind_text(stmt, 1, page_name.c_str(), -1, SQLITE_STATIC);
         sqlite3_bind_text(stmt, 2, content.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_int(stmt, 3, page_ver);
 
         rc = sqlite3_step(stmt);
         if (rc != SQLITE_DONE) {
             throw std::runtime_error("Failed to insert data");
         }
         sqlite3_finalize(stmt);
+
+        return true;
     }
 };

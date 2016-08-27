@@ -62,16 +62,20 @@ namespace woale {
             /**
              * Return the content of a page.
              * \param[in] page_name the name of the page to return.
+             * \param[out] page_ver the version of the page. 0 if the page does not exist in the database.
              * \return the content of a page.
              */
-            const std::string get_page(const std::string page_name) const;
+            const std::string get_page(const std::string page_name, unsigned int &page_ver) const;
 
             /**
              * Save a new version of a page.
              * \param[in] page_name the name of the page to return.
              * \param[in] content the content of the page to save.
+             * \param[in] page_ver the version of the page to save.
+             * \retval true if the page was saved.
+             * \retval false if this page version is already used.
              */
-            void save_page(const std::string page_name, const std::string content);
+            bool save_page(const std::string page_name, const std::string content, unsigned int page_ver);
 
         private:
             /**
