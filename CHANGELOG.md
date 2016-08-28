@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Reorganised the SQLite database and added a proper SQL schema.
 - Removed the marked.min.js library. Users are required to install the library
   separately.
+- Added a simple conflict detection so that concurrent edits of the same page
+  don't go unnoticed.
 - Improved the documentation.
 
 ## [v0.0.2] - 2016-08-14

@@ -123,6 +123,22 @@ static const std::string normalize_path(const std::string src)
 
 
 /**
+ * Create a diff of two texts.
+ * \param[in] mine the user's version of the page.
+ * \param[in] theirs the newest version of the page in the database.
+ * \return a diffed version of the two pages.
+ *
+ * This is the simplest possbile implementation of the diff, by simply
+ * returning both versions as entirely conflicting. This should be refined to
+ * generate a better diff.
+ */
+static const std::string get_diff(const std::string mine, const std::string theirs)
+{
+    return std::string("<<<<<<< Mine\n") + mine + "\n=======\n" + theirs + "\n>>>>>>> Theirs\n";
+}
+
+
+/**
  * Main program entry.
  * \param[in] argc the number of arguments.
  * \param[in] argv a vector of pointers to string.
@@ -145,13 +161,17 @@ int main(int argc, char **argv)
 
         const std::string page_path = normalize_path(env.getPathInfo());
 
+        bool conflict = false;
+        std::string unsaved_page = "";
         cgicc::form_iterator submit = cgi.getElement("savepage");
         if (submit != cgi.getElements().end()) {
             cgicc::form_iterator elem = cgi.getElement("page_ver");
             if (elem != cgi.getElements().end() && !elem->isEmpty()) {
                 unsigned int page_ver = std::stoi(elem->getValue());
-                if (!db.save_page(page_path, escape(cgi("wikitext")), page_ver)) {
-                    // FIXME add something here
+                std::string page = cgi("wikitext");
+                if (!db.save_page(page_path, escape(page), page_ver)) {
+                    conflict = true;
+                    unsaved_page = page;
                 }
             }
         }
@@ -173,7 +193,13 @@ int main(int argc, char **argv)
         std::cout << cgicc::body();
 
         cgicc::form_iterator edit = cgi.getElement("edit");
-        if (edit != cgi.getElements().end() && !edit->isEmpty()) {
+        bool do_edit = edit != cgi.getElements().end() && !edit->isEmpty();
+        if (conflict) {
+            std::cout << cgicc::h1() << "Resolve conflicts below" << cgicc::h1() << "\n";
+            page = get_diff(unsaved_page, page);
+            do_edit = true;
+        }
+        if (do_edit) {
             std::string path_info = env.getScriptName() + page_path;
             std::cout <<
                 cgicc::form().set("method", "post").set("enctype", "multipart/form-data").set("action", path_info) <<

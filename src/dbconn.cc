@@ -27,6 +27,26 @@
 
 namespace woale {
 
+    static bool simple_query(sqlite3 *db, const std::string request)
+    {
+        sqlite3_stmt *stmt;
+        const char *pzTail;
+        int rc;
+
+        rc = sqlite3_prepare(db, request.c_str(), -1, &stmt, &pzTail);
+        if (rc != SQLITE_OK) {
+            return false;
+        }
+
+        rc = sqlite3_step(stmt);
+        if (rc != SQLITE_DONE) {
+            return false;
+        }
+        sqlite3_finalize(stmt);
+        return true;
+    }
+
+
     DbConn::DbConn(const std::string file_name) :
         db_(nullptr)
     {
@@ -102,6 +122,21 @@ namespace woale {
         const char *pzTail;
         int rc;
 
+        /* Lock the table. */
+        if (!simple_query(db_, "begin transaction;"))
+        {
+            throw std::runtime_error("Failed to begin transaction");
+        }
+
+        unsigned int next_entry_id;
+        get_page(page_name, next_entry_id);
+
+        if (next_entry_id + 1 != page_ver) {
+            simple_query(db_, "end transaction;");
+            return false;
+        }
+
+        /* Insert the page name. */
         const std::string ins_page = "insert or ignore into page (name) values (?1);";
         rc = sqlite3_prepare(db_, ins_page.c_str(), -1, &stmt, &pzTail);
         if (rc != SQLITE_OK) {
@@ -115,6 +150,8 @@ namespace woale {
         }
         sqlite3_finalize(stmt);
 
+
+        /* Insert the new wiki content. */
         const std::string ins_entry = "with ins (page_name, date, content) as (values (?1, datetime(), ?2)) "
             "insert into entry (id, page_id, date, content) select ?3, page.id, ins.date, ins.content "
             "from page join ins on ins.page_name = page.name;";
@@ -131,6 +168,12 @@ namespace woale {
             throw std::runtime_error("Failed to insert data");
         }
         sqlite3_finalize(stmt);
+
+        /* Unlock the table. */
+        if (!simple_query(db_, "end transaction;"))
+        {
+            throw std::runtime_error("Failed to begin transaction");
+        }
 
         return true;
     }
