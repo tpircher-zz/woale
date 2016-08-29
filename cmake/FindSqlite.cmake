@@ -35,6 +35,10 @@
 #   Sqlite_INCLUDE_DIRS     - include directories
 #   Sqlite_LIBRARIES        - libcgicc component libraries to be linked
 #
+#
+# The following import target is created
+#
+#   Sqlite::Sqlite
 
 # Use pkg-config (if available) to find the directories of the componants.
 find_package(PkgConfig QUIET)
@@ -57,5 +61,8 @@ find_package_handle_standard_args(Sqlite DEFAULT_MSG
 
 mark_as_advanced(Sqlite_FOUND SQLITE_INCLUDE_DIR SQLITE_LIBRARY)
 
-set(SQLITE_LIBRARIES ${SQLITE_LIBRARY})
-set(SQLITE_INCLUDE_DIRS ${SQLITE_INCLUDE_DIR})
+if(Sqlite_FOUND AND NOT TARGET Sqlite::Sqlite)
+    add_library(Sqlite::Sqlite UNKNOWN IMPORTED)
+    set_property(TARGET Sqlite::Sqlite PROPERTY IMPORTED_LOCATION ${SQLITE_LIBRARY})
+    set_property(TARGET Sqlite::Sqlite PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${SQLITE_INCLUDE_DIR}")
+endif()

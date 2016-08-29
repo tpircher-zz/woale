@@ -32,7 +32,7 @@ find_package(Sqlite REQUIRED)
 set(target woale.cgi)
 add_executable(${target} main.cc fileparser.cc woale_confparser.cc dbconn.cc)
 include_directories(${target} ${CGICC_INCLUDE_DIR} ${SQLITE_INCLUDE_DIR})
-target_link_libraries(${target} ${CGICC_LIBRARY} ${SQLITE_LIBRARY})
+target_link_libraries(${target} Cgicc::Cgicc Sqlite::Sqlite)
 
 
 install(TARGETS "${target}"

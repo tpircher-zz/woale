@@ -35,6 +35,10 @@
 #   Cgicc_INCLUDE_DIRS      - include directories
 #   Cgicc_LIBRARIES         - libcgicc component libraries to be linked
 #
+#
+# The following import target is created
+#
+#   Cgicc::Cgicc
 
 # Use pkg-config (if available) to find the directories of the componants.
 find_package(PkgConfig QUIET)
@@ -57,5 +61,9 @@ find_package_handle_standard_args(Cgicc DEFAULT_MSG
 
 mark_as_advanced(Cgicc_FOUND CGICC_INCLUDE_DIR CGICC_LIBRARY)
 
-set(CGICC_LIBRARIES ${CGICC_LIBRARY})
-set(CGICC_INCLUDE_DIRS ${CGICC_INCLUDE_DIR})
+
+if(Cgicc_FOUND AND NOT TARGET Cgicc::Cgicc)
+    add_library(Cgicc::Cgicc UNKNOWN IMPORTED)
+    set_property(TARGET Cgicc::Cgicc PROPERTY IMPORTED_LOCATION ${CGICC_LIBRARY})
+    set_property(TARGET Cgicc::Cgicc PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${CGICC_INCLUDE_DIR}")
+endif()
