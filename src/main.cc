@@ -33,7 +33,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <tuple>
 
+using namespace std::string_literals;
 
 
 /**
@@ -43,9 +45,9 @@
  */
 static const std::string escape(const std::string src)
 {
-    std::string dst = "";
+    auto dst = ""s;
 
-    for(const char& c : src) {
+    for (auto& c : src) {
         if (c == '\n') {
             dst += "\\n";
         } else if (c == '\r') {
@@ -69,10 +71,10 @@ static const std::string escape(const std::string src)
  */
 static const std::string unescape(const std::string src)
 {
-    bool escaping = false;
-    std::string dst = "";
+    auto escaping = false;
+    auto dst = ""s;
 
-    for(const char& c : src) {
+    for (auto& c : src) {
         if (escaping) {
             if (c == 'n') {
                 dst += '\n';
@@ -81,7 +83,7 @@ static const std::string unescape(const std::string src)
             }
             escaping = false;
         } else if (c == '\\') {
-                escaping = true;
+            escaping = true;
         } else {
             dst += c;
         }
@@ -97,10 +99,10 @@ static const std::string unescape(const std::string src)
  */
 static const std::string normalize_path(const std::string src)
 {
-    std::string dst = "";
+    auto dst = ""s;
 
-    bool slash_seen = true;
-    for(const char& c : src) {
+    auto slash_seen = true;
+    for (auto& c : src) {
         if (c == '/') {
             slash_seen = true;
         } else if (slash_seen) {
@@ -134,7 +136,7 @@ static const std::string normalize_path(const std::string src)
  */
 static const std::string get_diff(const std::string mine, const std::string theirs)
 {
-    return std::string("<<<<<<< Mine\n") + mine + "\n=======\n" + theirs + "\n>>>>>>> Theirs\n";
+    return "<<<<<<< Mine\n"s + mine + "\n=======\n"s + theirs + "\n>>>>>>> Theirs\n"s;
 }
 
 
@@ -157,18 +159,18 @@ int main(int argc, char **argv)
         woale::DbConn db(fp.data_dir() + "/pages.sqlite3");
 
         cgicc::Cgicc cgi;
-        cgicc::CgiEnvironment env = cgi.getEnvironment();
+        auto env = cgi.getEnvironment();
 
-        const std::string page_path = normalize_path(env.getPathInfo());
+        const auto page_path = normalize_path(env.getPathInfo());
 
-        bool conflict = false;
-        std::string unsaved_page = "";
-        cgicc::form_iterator submit = cgi.getElement("savepage");
+        auto conflict = false;
+        auto unsaved_page = ""s;
+        auto submit = cgi.getElement("savepage");
         if (submit != cgi.getElements().end()) {
-            cgicc::form_iterator elem = cgi.getElement("page_ver");
+            auto elem = cgi.getElement("page_ver");
             if (elem != cgi.getElements().end() && !elem->isEmpty()) {
-                unsigned int page_ver = std::stoi(elem->getValue());
-                std::string page = cgi("wikitext");
+                auto page_ver = std::stoi(elem->getValue());
+                auto page = cgi("wikitext");
                 if (!db.save_page(page_path, escape(page), page_ver)) {
                     conflict = true;
                     unsaved_page = page;
@@ -177,7 +179,8 @@ int main(int argc, char **argv)
         }
 
         unsigned int page_ver;
-        std::string page = unescape(db.get_page(page_path, page_ver));
+        std::string page;
+        std::tie(page, page_ver) = db.get_page(page_path);
 
         // Send HTTP header
         std::cout << cgicc::HTTPHTMLHeader();
@@ -192,19 +195,20 @@ int main(int argc, char **argv)
             cgicc::head() << "\n";
         std::cout << cgicc::body();
 
-        cgicc::form_iterator edit = cgi.getElement("edit");
-        bool do_edit = edit != cgi.getElements().end() && !edit->isEmpty();
+        auto edit = cgi.getElement("edit");
+        auto do_edit = edit != cgi.getElements().end() && !edit->isEmpty();
         if (conflict) {
             std::cout << cgicc::h1() << "Resolve conflicts below" << cgicc::h1() << "\n";
-            page = get_diff(unsaved_page, page);
+            page = get_diff(unsaved_page, unescape(page));
             do_edit = true;
         }
-        if (do_edit) {
+        if (do_edit)
+        {
             std::string path_info = env.getScriptName() + page_path;
             std::cout <<
                 cgicc::form().set("method", "post").set("enctype", "multipart/form-data").set("action", path_info) <<
                 cgicc::textarea().set("name", "wikitext").set("autofocus", "autofocus").set("rows", "20").set("style", "width: 90%") <<
-                page <<
+                unescape(page) <<
                 cgicc::textarea() << cgicc::br() <<
                 cgicc::input().set("type", "submit").set("name", "savepage").set("value", "Save Page") <<
                 " &nbsp; &nbsp; " <<
@@ -218,7 +222,7 @@ int main(int argc, char **argv)
                 cgicc::div() <<
                 cgicc::div().set("id", "content") << cgicc::div() <<
                 cgicc::script() <<
-                "page_content = '" << escape(page) << "';" <<
+                "page_content = '" << page << "';" <<
                 "document.getElementById('content').innerHTML = marked(page_content);" <<
                 cgicc::script() << "\n";
         }

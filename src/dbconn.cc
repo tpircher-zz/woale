@@ -24,16 +24,19 @@
 #include "dbconn.h"
 #include <sqlite3.h>
 #include <stdexcept>
+#include <tuple>
+#include <utility>
+
+using namespace std::string_literals;
 
 namespace woale {
 
-    static bool simple_query(sqlite3 *db, const std::string request)
+    static bool simple_query(sqlite3 *db, const char* request)
     {
         sqlite3_stmt *stmt;
         const char *pzTail;
-        int rc;
 
-        rc = sqlite3_prepare(db, request.c_str(), -1, &stmt, &pzTail);
+        auto rc = sqlite3_prepare(db, request, -1, &stmt, &pzTail);
         if (rc != SQLITE_OK) {
             return false;
         }
@@ -56,10 +59,9 @@ namespace woale {
 
         sqlite3_stmt *stmt;
         const char *pzTail;
-        int rc;
 
-        const std::string sql_request = "pragma foreign_keys = on;";
-        rc = sqlite3_prepare_v2(db_, sql_request.c_str(), -1, &stmt, &pzTail);
+        const auto sql_request = "pragma foreign_keys = on;";
+        auto rc = sqlite3_prepare_v2(db_, sql_request, -1, &stmt, &pzTail);
         if (rc != SQLITE_OK) {
             throw std::runtime_error("Failed to prepare sqlite statement");
         }
@@ -74,15 +76,14 @@ namespace woale {
     }
 
 
-    const std::string DbConn::get_page(const std::string page_name, unsigned int &page_ver) const
+    std::pair<const std::string, unsigned int> DbConn::get_page(const std::string page_name) const
     {
         sqlite3_stmt *stmt;
         const char *pzTail;
-        int rc;
 
-        const std::string sql_request = "select entry.id, content from entry inner join page on page_id = page.id "
-            "where name = ?1 order by date desc limit 1;";
-        rc = sqlite3_prepare_v2(db_, sql_request.c_str(), -1, &stmt, &pzTail);
+        const auto sql_request = "select entry.id, content from entry inner join page on page_id = page.id"
+            " where name = ?1 order by date desc limit 1;";
+        auto rc = sqlite3_prepare_v2(db_, sql_request, -1, &stmt, &pzTail);
         if (rc != SQLITE_OK) {
             throw std::runtime_error("Failed to prepare sqlite statement");
         }
@@ -95,41 +96,35 @@ namespace woale {
         rc = sqlite3_step(stmt);
         if (rc == SQLITE_DONE) {
             sqlite3_finalize(stmt);
-            page_ver = 0;
-            return "";  // "# Empty page.\nPress [edit](?edit=1) to edit this page.";
+            return std::make_pair(""s, 0);
         } else if (rc != SQLITE_ROW) {
             sqlite3_finalize(stmt);
             throw std::runtime_error("Failed to fetch row");
         }
 
-        page_ver = sqlite3_column_int(stmt, 0);
+        auto page_ver = sqlite3_column_int(stmt, 0);
 
-        std::string str;
-        const char *content = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
-        if (content == NULL) {
-            str = "";
-        } else {
-            str = content;
-        }
+        auto content = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+        auto str = content == NULL ? ""s : content;
         sqlite3_finalize(stmt);
 
-        return str;
+        return std::make_pair(str, page_ver);
     }
+
 
     bool DbConn::save_page(const std::string page_name, const std::string content, unsigned int page_ver)
     {
         sqlite3_stmt *stmt;
         const char *pzTail;
-        int rc;
 
         /* Lock the table. */
-        if (!simple_query(db_, "begin transaction;"))
-        {
+        if (!simple_query(db_, "begin transaction;")) {
             throw std::runtime_error("Failed to begin transaction");
         }
 
+        std::string dummy;
         unsigned int next_entry_id;
-        get_page(page_name, next_entry_id);
+        std::tie(dummy, next_entry_id) = get_page(page_name);
 
         if (next_entry_id + 1 != page_ver) {
             simple_query(db_, "end transaction;");
@@ -137,8 +132,8 @@ namespace woale {
         }
 
         /* Insert the page name. */
-        const std::string ins_page = "insert or ignore into page (name) values (?1);";
-        rc = sqlite3_prepare(db_, ins_page.c_str(), -1, &stmt, &pzTail);
+        const auto ins_page = "insert or ignore into page (name) values (?1);";
+        auto rc = sqlite3_prepare(db_, ins_page, -1, &stmt, &pzTail);
         if (rc != SQLITE_OK) {
             throw std::runtime_error("Failed to prepare sqlite statement");
         }
@@ -152,10 +147,10 @@ namespace woale {
 
 
         /* Insert the new wiki content. */
-        const std::string ins_entry = "with ins (page_name, date, content) as (values (?1, datetime(), ?2)) "
+        const auto ins_entry = "with ins (page_name, date, content) as (values (?1, datetime(), ?2)) "
             "insert into entry (id, page_id, date, content) select ?3, page.id, ins.date, ins.content "
             "from page join ins on ins.page_name = page.name;";
-        rc = sqlite3_prepare(db_, ins_entry.c_str(), -1, &stmt, &pzTail);
+        rc = sqlite3_prepare(db_, ins_entry, -1, &stmt, &pzTail);
         if (rc != SQLITE_OK) {
             throw std::runtime_error("Failed to prepare sqlite statement");
         }
@@ -170,8 +165,7 @@ namespace woale {
         sqlite3_finalize(stmt);
 
         /* Unlock the table. */
-        if (!simple_query(db_, "end transaction;"))
-        {
+        if (!simple_query(db_, "end transaction;")) {
             throw std::runtime_error("Failed to begin transaction");
         }
 

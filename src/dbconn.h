@@ -33,7 +33,6 @@ struct sqlite3;
 
 namespace woale {
 
-
     /**
      * Database interface class.
      *
@@ -63,9 +62,12 @@ namespace woale {
              * Return the content of a page.
              * \param[in] page_name the name of the page to return.
              * \param[out] page_ver the version of the page. 0 if the page does not exist in the database.
-             * \return the content of a page.
+             * \return a tuple where the first element is the content of a page and the second element is the page
+             *      version.
+             *      If the page version is 0 the the page does not exist in the database (and the page content is
+             *      returned as empty string).
              */
-            const std::string get_page(const std::string page_name, unsigned int &page_ver) const;
+            std::pair<const std::string, unsigned int> get_page(const std::string page_name) const;
 
             /**
              * Save a new version of a page.

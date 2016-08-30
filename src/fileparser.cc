@@ -27,6 +27,8 @@
 #include <stdexcept>
 #include <cctype>
 
+using namespace std::string_literals;
+
 namespace woale {
 
     /**
@@ -66,10 +68,10 @@ namespace woale {
             throw std::runtime_error(err.str());
         }
 
-        State state = NONE;
-        std::string id(""), val("");
+        auto state = State::NONE;
+        auto id = ""s, val = ""s;
 
-        unsigned int lineno = 1;
+        auto lineno = 1u;
         while (!fs.eof()) {
             char c;
 
