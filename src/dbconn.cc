@@ -31,6 +31,29 @@ using namespace std::string_literals;
 
 namespace woale {
 
+    void bind_arg(sqlite3_stmt *stmt, int index, const int data)
+    {
+        auto rc = sqlite3_bind_int(stmt, index, data);
+        if (rc != SQLITE_OK) {
+            throw std::runtime_error("Failed to prepare bind variable");
+        }
+    }
+
+    void bind_arg(sqlite3_stmt *stmt, int index, const std::string &data)
+    {
+        auto rc = sqlite3_bind_text(stmt, index, data.c_str(), -1, SQLITE_STATIC);
+        if (rc != SQLITE_OK) {
+            throw std::runtime_error("Failed to prepare bind variable");
+        }
+    }
+
+    template <typename ... Ts> void bind_all(sqlite3_stmt *stmt, const Ts& ... args)
+    {
+        auto index = 0;
+//        (bind_arg(stmt, ++index, args), ...);     // Fold expression available in C++17
+        (void)std::initializer_list<int> {(bind_arg(stmt, ++index, args), 0)...};
+    }
+
     static bool simple_query(sqlite3 *db, const char* request)
     {
         sqlite3_stmt *stmt;
@@ -137,7 +160,7 @@ namespace woale {
         if (rc != SQLITE_OK) {
             throw std::runtime_error("Failed to prepare sqlite statement");
         }
-        sqlite3_bind_text(stmt, 1, page_name.c_str(), -1, SQLITE_STATIC);
+        bind_all(stmt, page_name);
 
         rc = sqlite3_step(stmt);
         if (rc != SQLITE_DONE) {
@@ -154,9 +177,7 @@ namespace woale {
         if (rc != SQLITE_OK) {
             throw std::runtime_error("Failed to prepare sqlite statement");
         }
-        sqlite3_bind_text(stmt, 1, page_name.c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_text(stmt, 2, content.c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_int(stmt, 3, page_ver);
+        bind_all(stmt, page_name, content, page_ver);
 
         rc = sqlite3_step(stmt);
         if (rc != SQLITE_DONE) {
