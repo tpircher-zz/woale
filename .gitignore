@@ -3,3 +3,4 @@ build
 debian
 .pc
 data/share/marked.min.js
+data/share/woale

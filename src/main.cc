@@ -179,8 +179,9 @@ int main(int argc, char **argv)
         }
 
         unsigned int page_ver;
-        std::string page;
-        std::tie(page, page_ver) = db.get_page(page_path);
+        std::string escaped_page;
+        std::tie(escaped_page, page_ver) = db.get_page(page_path);
+        auto page = unescape(escaped_page);
 
         // Send HTTP header
         std::cout << cgicc::HTTPHTMLHeader();
@@ -199,7 +200,7 @@ int main(int argc, char **argv)
         auto do_edit = edit != cgi.getElements().end() && !edit->isEmpty();
         if (conflict) {
             std::cout << cgicc::h1() << "Resolve conflicts below" << cgicc::h1() << "\n";
-            page = get_diff(unsaved_page, unescape(page));
+            page = get_diff(unsaved_page, page);
             do_edit = true;
         }
         if (do_edit)
@@ -208,7 +209,7 @@ int main(int argc, char **argv)
             std::cout <<
                 cgicc::form().set("method", "post").set("enctype", "multipart/form-data").set("action", path_info) <<
                 cgicc::textarea().set("name", "wikitext").set("autofocus", "autofocus").set("rows", "20").set("style", "width: 90%") <<
-                unescape(page) <<
+                page <<
                 cgicc::textarea() << cgicc::br() <<
                 cgicc::input().set("type", "submit").set("name", "savepage").set("value", "Save Page") <<
                 " &nbsp; &nbsp; " <<
@@ -222,7 +223,7 @@ int main(int argc, char **argv)
                 cgicc::div() <<
                 cgicc::div().set("id", "content") << cgicc::div() <<
                 cgicc::script() <<
-                "page_content = '" << page << "';" <<
+                "page_content = '" << escaped_page << "';" <<
                 "document.getElementById('content').innerHTML = marked(page_content);" <<
                 cgicc::script() << "\n";
         }

@@ -30,7 +30,11 @@ set(local_cmake_config_included true)
 
 # Set default compiler flags.
 set(cxx_warnings "-W -Wall -Werror -Wextra -Wstrict-aliasing -Weffc++ -std=c++14")
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
 set(cxx_flags "-ftree-vectorize -ftree-vectorizer-verbose=2 -ffast-math -fstrict-aliasing")
+elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+set(cxx_flags "-ftree-vectorize -ffast-math -fstrict-aliasing")
+endif()
 set(common_cxx_flags "${cxx_warnings} ${cxx_flags}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${common_cxx_flags}")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${common_cxx_flags}")
