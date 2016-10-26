@@ -57,7 +57,7 @@ builddir = 'build'
 if not os.path.exists(builddir):
     os.makedirs(builddir)
 
-cmake_cmd = ['cmake', args.srcdir, '-DCMAKE_BUILD_TYPE=Release']
+cmake_cmd = ['cmake', args.srcdir, '-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_EXPORT_COMPILE_COMMANDS=1']
 
 if args.prefix is not None:
     cmake_cmd.append('-DCMAKE_INSTALL_PREFIX={0:s}'.format(os.path.abspath(args.prefix)))
