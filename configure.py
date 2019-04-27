@@ -26,6 +26,8 @@ import subprocess
 progname = os.path.basename(__file__)
 
 parser = argparse.ArgumentParser(description='configures this build to adapt to many kinds of systems.')
+parser.add_argument('--builddir', dest='builddir', metavar='DIR', default='build',
+                   help='build in in DIR.')
 parser.add_argument('--srcdir', dest='srcdir', metavar='DIR', default=os.path.dirname(__file__),
                    help='find the sources in DIR.')
 parser.add_argument('--prefix', dest='prefix', metavar='DIR',
@@ -53,9 +55,10 @@ def conf_error(error_str):
     sys.exit(1)
 
 
-builddir = 'build'
-if not os.path.exists(builddir):
-    os.makedirs(builddir)
+if os.path.exists(args.builddir):
+    conf_error('build directory "' + args.builddir + '" exists.')
+else:
+    os.makedirs(args.builddir)
 
 cmake_cmd = ['cmake', args.srcdir, '-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_EXPORT_COMPILE_COMMANDS=1']
 
@@ -77,9 +80,9 @@ if args.docdir is not None:
 
 
 print(' '.join(cmake_cmd))
-cmd = subprocess.Popen(cmake_cmd, cwd=builddir)
+cmd = subprocess.Popen(cmake_cmd, cwd=args.builddir)
 cmd.wait()
 
 if cmd.returncode == 0:
     print('\nConfiguration successful.')
-    print('Now cd to the directory "{0:s}" and type "make"'.format(builddir))
+    print('Now cd to the directory "{0:s}" and type "make"'.format(args.builddir))
